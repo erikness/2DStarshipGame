@@ -5,8 +5,11 @@ import java.util.List;
 import com.erikleeness.starship.models.ObstacleModel;
 import com.erikleeness.starship.models.StarshipModel;
 import com.erikleeness.starship.models.WeaponBlastModel;
+import com.erikleeness.starship.routers.PlayerMotionListener;
+import com.erikleeness.starship.routers.PlayerWeaponListener;
+import com.erikleeness.starship.util.CardinalDirection;
 
-public class GUIModel implements Updatable
+public class GUIModel implements Updatable, PlayerMotionListener, PlayerWeaponListener
 {
 	private StarshipModel playerShip;
 	private List<StarshipModel> enemyShips;
@@ -34,12 +37,7 @@ public class GUIModel implements Updatable
 		this.obstacles = obstacles;
 		this.weaponBlasts = weaponBlasts;
 	}
-
-	@Override
-	public void update(int msDelay)
-	{
-		msAtLastUpdate = System.currentTimeMillis();
-	}
+	
 	
 	/**
 	 * Called when calculating how far to move objects
@@ -48,12 +46,32 @@ public class GUIModel implements Updatable
 	 */
 	public int msSinceLastUpdate()
 	{
-		// We really don't expect it to have been over
-		// 2 billion ms since the last update
+		/* We really don't expect it to have been over
+		 * 2 billion ms since the last update */
 		return (int) (System.currentTimeMillis() - msAtLastUpdate);
 	}
+
+	@Override
+	public void update(int msDelay)
+	{
+		msAtLastUpdate = System.currentTimeMillis();
+	}
 	
-	
-	
-	
+	@Override
+	public void firePlayerWeapon()
+	{
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void setPlayerDirection(CardinalDirection direction)
+	{
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void stopPlayerMotion()
+	{
+		// TODO Auto-generated method stub
+	}
 }
