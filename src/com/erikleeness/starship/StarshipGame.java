@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import com.erikleeness.starship.builders.GUIModelBuilder;
+import com.erikleeness.starship.input.KeyboardInputChannel;
 import com.erikleeness.starship.input.MouseInputChannel;
 import com.erikleeness.starship.input.TimeInputChannel;
 import com.erikleeness.starship.models.StarshipModel;
@@ -19,10 +20,12 @@ public class StarshipGame
 {
 	private GUIModel guiModel;
 	private JFrame frame;
-	private JPanel gamePanel;
+	private GamePanel gamePanel;
 	
 	private TimeInputChannel timerInput;
 	private MouseInputChannel mouseInput;
+	private KeyboardInputChannel keyInput;
+	
 	private Router router;
 	
 	// Constants. Will make them into a db / text file later
@@ -53,6 +56,7 @@ public class StarshipGame
 			.build();
 		
 		initWindow();
+		initInputs();
 	}
 	
 	public void initWindow()
@@ -68,10 +72,18 @@ public class StarshipGame
 	{
 		// 25 ms <==> 40 hz
 		router = new ControlRouter();
+		
 		router.registerUpdateRoute(guiModel);
+		router.registerPlayerMotionRoute(guiModel);
+		router.registerPlayerWeaponRoute(guiModel);
+		
+		/* Make sure this STAYS after the guiModel in order.
+		 * This ensures the model of the game is updated before it is painted. */
+		router.registerUpdateRoute(gamePanel);
 		
 		timerInput = new TimeInputChannel(router, 25);
 		mouseInput = new MouseInputChannel(router);
+		keyInput = new KeyboardInputChannel(router);
 	}
 	
 	public void start()

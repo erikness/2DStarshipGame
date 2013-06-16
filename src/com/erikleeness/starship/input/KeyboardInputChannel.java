@@ -40,6 +40,11 @@ public class KeyboardInputChannel implements KeyListener
 			router.setPlayerDirection(CardinalDirection.NORTH);
 			break;
 			
+		case KeyEvent.VK_SPACE:
+			
+			router.firePlayerWeapon();
+			break;
+			
 		}
 		
 	}

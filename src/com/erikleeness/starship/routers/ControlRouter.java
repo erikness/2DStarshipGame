@@ -9,9 +9,20 @@ import com.erikleeness.starship.input.KeyboardInputChannel;
 import com.erikleeness.starship.input.TimeInputChannel;
 import com.erikleeness.starship.util.CardinalDirection;
 
+/**
+ * Supports 4 routes:
+ * - Update, called when a timer demands that components update themselves
+ * - Set player direction
+ * - Stop player motion
+ * - Fire player weapon
+ * @author erik
+ *
+ */
 public class ControlRouter implements Router
 {	
-	private List<Updatable> routes;
+	private List<Updatable> updateRoutes;
+	private List<PlayerMotionListener> playerMotionRoutes;
+	private List<PlayerWeaponListener> playerWeaponRoutes;
 	
 	/**
 	 * 
@@ -20,13 +31,27 @@ public class ControlRouter implements Router
 	 */
 	public ControlRouter()
 	{
-		this.routes = new LinkedList<Updatable>();
+		this.updateRoutes = new LinkedList<Updatable>();
+		this.playerMotionRoutes = new LinkedList<PlayerMotionListener>();
+		this.playerWeaponRoutes = new LinkedList<PlayerWeaponListener>();
 	}
 	
 	@Override
 	public void registerUpdateRoute(Updatable route)
 	{
-		routes.add(route);
+		updateRoutes.add(route);
+	}
+	
+	@Override
+	public void registerPlayerMotionRoute(PlayerMotionListener route)
+	{
+		playerMotionRoutes.add(route);
+	}
+	
+	@Override
+	public void registerPlayerWeaponRoute(PlayerWeaponListener route)
+	{
+		playerWeaponRoutes.add(route);
 	}
 	
 	/**
@@ -37,7 +62,9 @@ public class ControlRouter implements Router
 	@Override
 	public void setPlayerDirection(CardinalDirection direction)
 	{
-		
+		for (PlayerMotionListener listener : playerMotionRoutes) {
+			listener.setPlayerDirection(direction);
+		}
 	}
 	
 	/**
@@ -48,7 +75,9 @@ public class ControlRouter implements Router
 	@Override
 	public void stopPlayerMotion()
 	{
-		
+		for (PlayerMotionListener listener : playerMotionRoutes) {
+			listener.stopPlayerMotion();
+		}
 	}
 	
 	/**
@@ -57,7 +86,9 @@ public class ControlRouter implements Router
 	@Override
 	public void firePlayerWeapon()
 	{
-		
+		for (PlayerWeaponListener listener : playerWeaponRoutes) {
+			listener.firePlayerWeapon();
+		}
 	}
 	
 	/**
@@ -66,7 +97,7 @@ public class ControlRouter implements Router
 	@Override
 	public void update(int msDelay)
 	{
-		for (Updatable route : routes) {
+		for (Updatable route : updateRoutes) {
 			route.update(msDelay);
 		}
 	}

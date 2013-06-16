@@ -11,7 +11,7 @@ import javax.swing.JPanel;
  * @author erik
  *
  */
-public class GamePanel extends JPanel
+public class GamePanel extends JPanel implements Updatable
 {
 	private static final long serialVersionUID = 1L;
 	private GUIModel guiModel;
@@ -50,6 +50,12 @@ public class GamePanel extends JPanel
 	private void paintBackground(Graphics graphics)
 	{
 		// TODO
+	}
+
+	@Override
+	public void update(int msDelay)
+	{
+		this.repaint();
 	}
 	
 	
